@@ -170,6 +170,10 @@ function gameLoop(currentTime) {
   const frameTimeDelta = currentTime - previousTime;
   previousTime = currentTime;
 
+  function updateGameSpeed(frameTimeDelta) {
+    gameSpeed += frameTimeDelta * GAME_SPEED_INCREMENT;
+  }
+
   clearScreen();
 
   if (!gameOver && !waitingToStart) {
@@ -177,6 +181,7 @@ function gameLoop(currentTime) {
     ground.update(gameSpeed, frameTimeDelta);
     cactiController.update(gameSpeed, frameTimeDelta);
     player.update(gameSpeed, frameTimeDelta);
+    updateGameSpeed(frameTimeDelta);
   }
 
   if (!gameOver && cactiController.collideWith(player)) {
