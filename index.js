@@ -37,6 +37,8 @@ let cactiController = null;
 
 let gameSpeed = GAME_SPEED_START;
 let gameOver = false;
+let hasAddedEventListnersForRestart = false;
+let waitingToStart = true;
 
 function createSprites() {
   const playerWidthIngame = PLAYER_WIDTH * scaleRatio;
@@ -115,6 +117,44 @@ function getScaleRatio() {
   }
 }
 
+function showGameOver() {
+  const fontSize = 70 * scaleRatio;
+  ctx.font = `${fontSize}px Verdana`;
+  ctx.fillStyle = "grey";
+  const x = canvas.width / 4.5;
+  const y = canvas.height / 2;
+  ctx.fillText("GAME OVER", x, y);
+}
+
+function setupGameReset() {
+  if (!hasAddedEventListnersForRestart) {
+    hasAddedEventListnersForRestart = true;
+
+    setTimeout(() => {
+      window.addEventListener("keyup", reset, { once: true });
+      window.addEventListener("touchstart", reset, { once: true });
+    }, 1000);
+  }
+}
+
+function reset() {
+  hasAddedEventListnersForRestart = false;
+  gameOver = false;
+  ground.reset();
+  waitingToStart = false;
+  cactiController.reset();
+  gameSpeed = GAME_SPEED_START;
+}
+
+function showStartGameText() {
+  const fontSize = 40 * scaleRatio;
+  ctx.font = `${fontSize}px Verdana`;
+  ctx.fillStyle = "grey";
+  const x = canvas.width / 14;
+  const y = canvas.height / 2;
+  ctx.fillText("Tap Screen or Press Space To Start", x, y);
+}
+
 function clearScreen() {
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -132,7 +172,7 @@ function gameLoop(currentTime) {
 
   clearScreen();
 
-  if (!gameOver) {
+  if (!gameOver && !waitingToStart) {
     // update game objects
     ground.update(gameSpeed, frameTimeDelta);
     cactiController.update(gameSpeed, frameTimeDelta);
@@ -141,6 +181,7 @@ function gameLoop(currentTime) {
 
   if (!gameOver && cactiController.collideWith(player)) {
     gameOver = true;
+    setupGameReset();
   }
 
   // draw game objects
@@ -148,7 +189,18 @@ function gameLoop(currentTime) {
   cactiController.draw();
   player.draw();
 
+  if (gameOver) {
+    showGameOver();
+  }
+
+  if (waitingToStart) {
+    showStartGameText();
+  }
+
   requestAnimationFrame(gameLoop);
 }
 
 requestAnimationFrame(gameLoop);
+
+window.addEventListener("keyup", reset, { once: true });
+window.addEventListener("touchstart", reset, { once: true });
