@@ -1,3 +1,5 @@
+import Cactus from "./Cactus.js";
+
 export default class CactiController {
   CACTUS_INTERVAL_MIN = 500;
   CACTUS_INTERVAL_MAX = 2000;
@@ -40,6 +42,8 @@ export default class CactiController {
       cactusImage.height,
       cactusImage.image
     );
+
+    this.cacti.push(cactus);
   }
 
   update(gameSpeed, frameTimeDelta) {
@@ -49,7 +53,20 @@ export default class CactiController {
       this.setNextCactusTime();
     }
     this.nextCactusInterval -= frameTimeDelta;
+
+    this.cacti.forEach((cactus) => {
+      cactus.update(this.speed, gameSpeed, frameTimeDelta, this.scaleRatio);
+    });
+
+    // decrease the number of created cactus when it disappered from the screen
+    this.cacti = this.cacti.filter((cactus) => cactus.x > -cactus.width);
   }
 
-  draw() {}
+  draw() {
+    this.cacti.forEach((cactus) => cactus.draw());
+  }
+
+  collideWith(sprite) {
+    return this.cacti.some((cactus) => cactus.collideWith(sprite));
+  }
 }

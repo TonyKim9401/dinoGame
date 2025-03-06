@@ -36,6 +36,7 @@ let previousTime = null;
 let cactiController = null;
 
 let gameSpeed = GAME_SPEED_START;
+let gameOver = false;
 
 function createSprites() {
   const playerWidthIngame = PLAYER_WIDTH * scaleRatio;
@@ -131,10 +132,16 @@ function gameLoop(currentTime) {
 
   clearScreen();
 
-  // update game objects
-  ground.update(gameSpeed, frameTimeDelta);
-  cactiController.update(gameSpeed, frameTimeDelta);
-  player.update(gameSpeed, frameTimeDelta);
+  if (!gameOver) {
+    // update game objects
+    ground.update(gameSpeed, frameTimeDelta);
+    cactiController.update(gameSpeed, frameTimeDelta);
+    player.update(gameSpeed, frameTimeDelta);
+  }
+
+  if (!gameOver && cactiController.collideWith(player)) {
+    gameOver = true;
+  }
 
   // draw game objects
   ground.draw();
