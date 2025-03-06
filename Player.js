@@ -1,4 +1,8 @@
 export default class Player {
+  WALK_ANIMATION_TIMER = 200;
+  walkAnimationTimer = this.WALK_ANIMATION_TIMER;
+  dinoRunImages = [];
+
   constructor(ctx, width, height, minJumpHeight, maxJumpHeight, scaleRatio) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
@@ -14,6 +18,30 @@ export default class Player {
     this.standingStillImage = new Image();
     this.standingStillImage.src = "./images/standing_still.png";
     this.image = this.standingStillImage;
+
+    const dinoRunImages1 = new Image();
+    dinoRunImages1.src = "./images/dino_run1.png";
+
+    const dinoRunImages2 = new Image();
+    dinoRunImages2.src = "./images/dino_run2.png";
+
+    this.dinoRunImages.push(dinoRunImages1);
+    this.dinoRunImages.push(dinoRunImages2);
+  }
+
+  update(gameSpeed, frameTimeDelta) {
+    this.run(gameSpeed, frameTimeDelta);
+  }
+
+  run(gameSpeed, frameTimeDelta) {
+    if (this.walkAnimationTimer <= 0) {
+      this.image =
+        this.image === this.dinoRunImages[0]
+          ? this.dinoRunImages[1]
+          : this.dinoRunImages[0];
+      this.walkAnimationTimer = this.WALK_ANIMATION_TIMER;
+    }
+    this.walkAnimationTimer -= frameTimeDelta * gameSpeed;
   }
 
   draw() {
