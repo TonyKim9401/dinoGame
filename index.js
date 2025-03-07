@@ -28,6 +28,9 @@ const CACTI_CONFIG = [
   { width: 68 / 1.5, height: 70 / 1.5, image: "./images/cactus_3.png" },
 ];
 
+// Game music
+const MUSIC_GAMEOVER = new Audio("./sounds/gameover.mp3");
+
 // Game Objects;
 let player = null;
 let ground = null;
@@ -133,7 +136,6 @@ function showGameOver() {
 function setupGameReset() {
   if (!hasAddedEventListnersForRestart) {
     hasAddedEventListnersForRestart = true;
-
     setTimeout(() => {
       window.addEventListener("keyup", reset, { once: true });
       window.addEventListener("touchstart", reset, { once: true });
@@ -149,6 +151,8 @@ function reset() {
   cactiController.reset();
   score.reset();
   gameSpeed = GAME_SPEED_START;
+
+  createSprites();
 }
 
 function showStartGameText() {
@@ -191,6 +195,7 @@ function gameLoop(currentTime) {
   }
 
   if (!gameOver && cactiController.collideWith(player)) {
+    MUSIC_GAMEOVER.play();
     gameOver = true;
     setupGameReset();
     score.setHighScore();

@@ -9,6 +9,8 @@ export default class Player {
   JUMP_SPEED = 0.6;
   GRAVITY = 0.4;
 
+  MUSIC_JUMP = new Audio("./sounds/jump.mp3");
+
   constructor(ctx, width, height, minJumpHeight, maxJumpHeight, scaleRatio) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
@@ -82,6 +84,8 @@ export default class Player {
 
   jump(frameTimeDelta) {
     if (this.jumpPressed) {
+      this.MUSIC_JUMP.currentTime = 0;
+      this.MUSIC_JUMP.play();
       this.jumpInProgress = true;
     }
 
