@@ -1,0 +1,42 @@
+footer {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.icon {
+  font-size: 30px;
+  color: #555;
+  transition: color 0.3s ease-in-out, transform 0.2s;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+}
+
+.github:hover {
+  color: black;
+}
+
+.linkedin:hover {
+  color: #0077b5;
+}
+
+.email:hover {
+  color: red;
+}
+
+/* 반응형: 모바일에서 크기 조정 */
+@media (max-width: 600px) {
+  .icon {
+    font-size: 24px;
+  }
+}
